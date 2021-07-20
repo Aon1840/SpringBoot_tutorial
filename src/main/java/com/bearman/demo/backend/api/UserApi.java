@@ -4,7 +4,9 @@ import com.bearman.demo.backend.business.UserBusiness;
 import com.bearman.demo.backend.entity.User;
 import com.bearman.demo.backend.exception.FileException;
 import com.bearman.demo.backend.exception.UserException;
+import com.bearman.demo.backend.model.LoginRequest;
 import com.bearman.demo.backend.model.RegisterRequest;
+import com.bearman.demo.backend.model.RegisterResponse;
 import com.bearman.demo.backend.model.TestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,18 +28,16 @@ public class UserApi {
         this.business = business;
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody LoginRequest request) throws UserException {
+        String response = business.login(request);
 
-    @GetMapping
-    public TestResponse test() {
-        TestResponse response = new TestResponse();
-        response.setFood("Rice");
-        response.setName("Aon");
-        return response;
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody RegisterRequest request) throws UserException {
-        User response = business.register(request);
+    public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest request) throws UserException {
+        RegisterResponse response = business.register(request);
         return ResponseEntity.ok(response);
     }
 
