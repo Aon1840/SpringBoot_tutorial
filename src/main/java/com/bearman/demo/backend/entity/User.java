@@ -1,5 +1,6 @@
 package com.bearman.demo.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -14,6 +15,7 @@ public class User extends BaseEntity {
     @Column(nullable = false, unique = true, length = 60)
     private String email;
 
+    @JsonIgnore
     @Column(nullable = false, length = 120)
     private String password;
 

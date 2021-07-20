@@ -4,6 +4,7 @@ import com.bearman.demo.backend.entity.User;
 import com.bearman.demo.backend.exception.UserException;
 import com.bearman.demo.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -13,6 +14,9 @@ public class UserService {
 
     @Autowired
     private UserRepository repository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public User create(String email, String password, String name) throws UserException {
         // validate
@@ -36,7 +40,7 @@ public class UserService {
         //save
         User entity = new User();
         entity.setEmail(email);
-        entity.setPassword(password);
+        entity.setPassword(passwordEncoder.encode(password));
         entity.setName(name);
 
         return repository.save(entity);
