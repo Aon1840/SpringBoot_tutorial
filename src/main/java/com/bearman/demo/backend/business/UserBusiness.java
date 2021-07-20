@@ -1,8 +1,11 @@
 package com.bearman.demo.backend.business;
 
+import com.bearman.demo.backend.entity.User;
 import com.bearman.demo.backend.exception.FileException;
 import com.bearman.demo.backend.exception.UserException;
 import com.bearman.demo.backend.model.RegisterRequest;
+import com.bearman.demo.backend.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,18 +15,15 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class TestBusiness {
+public class UserBusiness {
 
-    public String register(RegisterRequest request) throws UserException {
-        if (request == null) {
-            throw UserException.requestNull();
-        }
+    @Autowired
+    private UserService userService;
 
-        // validate email
-        if (Objects.isNull(request.getEmail())) {
-            throw UserException.emailNull();
-        }
-        return "";
+    public User register(RegisterRequest request) throws UserException {
+        User user = userService.create(request.getEmail(), request.getPassword(), request.getName());
+        // TODO: mapper
+        return user;
     }
 
     public String uploadProfilePicture(MultipartFile file) throws FileException {

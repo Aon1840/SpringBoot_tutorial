@@ -1,6 +1,7 @@
 package com.bearman.demo.backend.api;
 
-import com.bearman.demo.backend.business.TestBusiness;
+import com.bearman.demo.backend.business.UserBusiness;
+import com.bearman.demo.backend.entity.User;
 import com.bearman.demo.backend.exception.FileException;
 import com.bearman.demo.backend.exception.UserException;
 import com.bearman.demo.backend.model.RegisterRequest;
@@ -11,17 +12,17 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/test")
-public class TestApi {
+@RequestMapping("/user")
+public class UserApi {
 
     // method1 => Field Injection
     @Autowired
 //    private TestBusiness business;
 
     // method2 => Constructor Injection
-    private final TestBusiness business;
+    private final UserBusiness business;
 
-    public TestApi(TestBusiness business) {
+    public UserApi(UserBusiness business) {
         this.business = business;
     }
 
@@ -35,8 +36,8 @@ public class TestApi {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody RegisterRequest request) throws UserException {
-        String response = business.register(request);
+    public ResponseEntity<User> register(@RequestBody RegisterRequest request) throws UserException {
+        User response = business.register(request);
         return ResponseEntity.ok(response);
     }
 
