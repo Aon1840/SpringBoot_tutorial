@@ -28,6 +28,6 @@ public class Social extends BaseEntity {
     private String tictok;
 
     @OneToOne
-    @JoinColumn(name = "m_user_id")
+    @JoinColumn(name = "m_user_id", nullable = false)
     private User user;
 }

@@ -1,5 +1,6 @@
 package com.bearman.demo.backend.service;
 
+import com.bearman.demo.backend.entity.Address;
 import com.bearman.demo.backend.entity.Social;
 import com.bearman.demo.backend.entity.User;
 import com.bearman.demo.backend.exception.UserException;
@@ -7,6 +8,7 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
 import java.util.Optional;
 
 @SpringBootTest
@@ -18,6 +20,9 @@ class UserServiceTest {
 
     @Autowired
     private SocialService socialService;
+
+    @Autowired
+    private AddressService addressService;
 
     @Order(1)
     @Test
@@ -77,6 +82,27 @@ class UserServiceTest {
 
     @Order(4)
     @Test
+    void testCreateAddress() {
+        Optional<User> opt = userService.findByEmail(TestCreateData.email);
+        Assertions.assertTrue(opt.isPresent());
+
+        User user = opt.get();
+
+        List<Address> addresses = user.getAddress();
+        Assertions.assertTrue(addresses.isEmpty());
+
+        Address address = addressService.create(
+                user,
+                AddressTestCreateData.line1,
+                AddressTestCreateData.line2,
+                AddressTestCreateData.zipcode);
+
+        Assertions.assertNotNull(address);
+        Assertions.assertEquals(AddressTestCreateData.line1, address.getLine1());
+    }
+
+    @Order(9)
+    @Test
     void testDelete() {
         Optional<User> opt = userService.findByEmail(TestCreateData.email);
         Assertions.assertTrue(opt.isPresent());
@@ -103,5 +129,11 @@ class UserServiceTest {
         String line = "Aon1840";
         String instagram = "Aon1840";
         String tiktok = "Aon1840";
+    }
+
+    interface AddressTestCreateData {
+        String line1 = "line1";
+        String line2 = "line2";
+        String zipcode = "zipcode";
     }
 }
