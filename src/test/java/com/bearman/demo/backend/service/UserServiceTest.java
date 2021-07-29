@@ -1,5 +1,6 @@
 package com.bearman.demo.backend.service;
 
+import com.bearman.demo.backend.entity.Social;
 import com.bearman.demo.backend.entity.User;
 import com.bearman.demo.backend.exception.UserException;
 import org.junit.jupiter.api.*;
@@ -14,6 +15,9 @@ class UserServiceTest {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private SocialService socialService;
 
     @Order(1)
     @Test
@@ -51,6 +55,28 @@ class UserServiceTest {
 
     @Order(3)
     @Test
+    void testCreateSocial() {
+        Optional<User> opt = userService.findByEmail(TestCreateData.email);
+        Assertions.assertTrue(opt.isPresent());
+
+        User user = opt.get();
+
+        Social social = user.getSocial();
+        Assertions.assertNull(social);
+
+        social = socialService.create(
+                user,
+                SocialTestCreateData.facebook,
+                SocialTestCreateData.line,
+                SocialTestCreateData.instagram,
+                SocialTestCreateData.tiktok);
+
+        Assertions.assertNotNull(social);
+        Assertions.assertEquals(SocialTestCreateData.facebook, social.getFacebook());
+    }
+
+    @Order(4)
+    @Test
     void testDelete() {
         Optional<User> opt = userService.findByEmail(TestCreateData.email);
         Assertions.assertTrue(opt.isPresent());
@@ -70,5 +96,12 @@ class UserServiceTest {
 
     interface TestUpdateData {
         String name = "aon";
+    }
+
+    interface SocialTestCreateData {
+        String facebook = "Aon1840";
+        String line = "Aon1840";
+        String instagram = "Aon1840";
+        String tiktok = "Aon1840";
     }
 }

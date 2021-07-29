@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -23,4 +24,7 @@ public class User extends BaseEntity {
     private String name;
 
     private String civilId;
+
+    @OneToOne(mappedBy = "user", orphanRemoval = true)
+    private Social social;
 }
