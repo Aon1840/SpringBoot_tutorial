@@ -7,6 +7,7 @@ import com.bearman.demo.backend.mapper.UserMapper;
 import com.bearman.demo.backend.model.LoginRequest;
 import com.bearman.demo.backend.model.RegisterRequest;
 import com.bearman.demo.backend.model.RegisterResponse;
+import com.bearman.demo.backend.service.TokenService;
 import com.bearman.demo.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -26,6 +26,9 @@ public class UserBusiness {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private TokenService tokenService;
 
     public String login(LoginRequest request) throws UserException {
         // validate request
@@ -41,10 +44,7 @@ public class UserBusiness {
             throw UserException.loginFailPasswordIncorrect();
         }
 
-        // TODO: generate JWT
-        String token = "JWT TO DO";
-
-        return token;
+        return tokenService.tokenize(user);
     }
 
     public RegisterResponse register(RegisterRequest request) throws UserException {
