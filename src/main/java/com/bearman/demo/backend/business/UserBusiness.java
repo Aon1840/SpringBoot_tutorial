@@ -9,7 +9,11 @@ import com.bearman.demo.backend.model.RegisterRequest;
 import com.bearman.demo.backend.model.RegisterResponse;
 import com.bearman.demo.backend.service.TokenService;
 import com.bearman.demo.backend.service.UserService;
+import com.bearman.demo.backend.util.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -51,6 +55,23 @@ public class UserBusiness {
         User user = userService.create(request.getEmail(), request.getPassword(), request.getName());
 
         return userMapper.toRegisterResponse(user);
+    }
+
+    public String refreshToken() throws UserException {
+        Optional<String> opt = SecurityUtil.getCurrentUserId();
+        if (opt.isEmpty()) {
+            throw UserException.userNotAuthorize();
+        }
+
+        String userId = opt.get();
+
+        Optional<User> optUser = userService.findById(userId);
+        if (optUser.isEmpty()) {
+            throw UserException.userNotFound();
+        }
+
+        User user = optUser.get();
+        return tokenService.tokenize(user);
     }
 
     public String uploadProfilePicture(MultipartFile file) throws FileException {

@@ -1,5 +1,8 @@
 package com.bearman.demo.backend.config;
 
+import com.bearman.demo.backend.config.token.TokenFilterConfigurer;
+import com.bearman.demo.backend.service.TokenService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,6 +15,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Autowired
+    private TokenService tokenService;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -23,7 +29,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeRequests().antMatchers("/user/register", "/user/login")
-                .anonymous().anyRequest().authenticated();
+                .anonymous().anyRequest().authenticated()
+                .and().apply(new TokenFilterConfigurer(tokenService));
     }
 
     @Override
